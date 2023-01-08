@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Data_engineering_batch_processing_infrastructure": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7042",
+      "launchBrowser": false
+    }
+  }
+}
