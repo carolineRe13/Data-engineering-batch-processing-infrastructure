@@ -5,7 +5,7 @@ param location string = resourceGroup().location
 param name string = 'DataEngineeringUSTrafficContainerGroup'
 
 @description('Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials.')
-param image string = 'DataEngineeringUSTrafficContainerRegistry.azurecr.io/samples/hello-world:1.0.0'
+param image string = 'dataengineeringustrafficcontainerregistry.azurecr.io/samples/hello-world:1.0.0'
 
 @description('Port to open on the container and the public IP address.')
 param port int = 80
