@@ -9,8 +9,10 @@ param location string = resourceGroup().location
 @description('Azure Container Registry tier')
 param acrSku string = 'Basic'
 
+/*
 @secure()
 param secret string
+*/
 
 resource acrResource 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' = {
   name: acrName
