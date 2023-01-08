@@ -25,17 +25,22 @@ jobs:
       # Build docker
     - name: Checkout repository
       uses: actions/checkout@v2
+    - run: echo "previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_ENV
+    - name: Create Tag
+      id: create_tag
+      uses: jaywcjlove/create-tag-action@main
+      if: env.previous_tag
+      with:
+        package-path: ./package.json
     - name: Log into registry
       uses: docker/login-action@v1
       with:
-        tag: "latest"
         registry: ${{ secrets.ACR_ENDPOINT }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - name: Build & Push
       uses: docker/build-push-action@v2
       with:
-        tag: "latest"
         push: true
         build-args: |
           version=${{ steps.tag.outputs.tag }}
