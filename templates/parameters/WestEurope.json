@@ -3,16 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "location": {
-        "value": "westeurope"
-      },
-      "databaseOptions": {
-        "value": {
-          "databaseName": "LinkGeek-cosmosdb-EU",
-          "databaseNameSQLServer": "LinkGeek-SQLServer-EU"
-        }
-      },
-      "sku": {
-        "value": "S1"
+        "resourceGroup": "westeurope"
       }
     }
   }

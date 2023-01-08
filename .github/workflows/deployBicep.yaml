@@ -20,5 +20,4 @@ jobs:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
         template: ./templates/main.bicep
-        parameters: ./templates/parameters/WestEurope.json
         failOnStdErr: false
