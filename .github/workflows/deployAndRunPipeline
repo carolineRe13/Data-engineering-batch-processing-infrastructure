@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron: '0 0 1 * *' # Run at 00:00 on the first day of every month
+    - cron:  '0 0 1 * *' # to run at 00:00 on the first day of every month
 name: Deploy and run pipeline
 jobs:
   build-and-deploy:
@@ -20,16 +20,17 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./templates/main.bicep
+        template: ./templates/pipeline.bicep
         failOnStdErr: false
 
-      # Build docker
-    - name: 'Build and push image'
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ secrets.ACR_ENDPOINT }}
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-    - run: |
-        docker build . -t ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
-        docker push ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
+    - name: 'Deploy to Azure Container Instances'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          resource-group: ${{ secrets.AZURE_RG }}
+          dns-name-label: ${{ secrets.AZURE_RG }}${{ github.run_number }}
+          image: ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
+          registry-login-server: ${{ secrets.ACR_ENDPOINT }}
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          name: aci-sampleapp
+          location: 'west europe'
