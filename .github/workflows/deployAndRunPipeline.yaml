@@ -24,14 +24,15 @@ jobs:
         template: ./templates/pipeline.bicep
         failOnStdErr: false
 
+      # Deploy to Azure container instances
     - name: 'Deploy to Azure Container Instances'
-        uses: 'azure/aci-deploy@v1'
-        with:
-          resource-group: ${{ secrets.AZURE_RG }}
-          dns-name-label: ${{ secrets.AZURE_RG }}${{ github.run_number }}
-          image: ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
-          registry-login-server: ${{ secrets.ACR_ENDPOINT }}
-          registry-username: ${{ secrets.REGISTRY_USERNAME }}
-          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: aci-sampleapp
-          location: 'west europe'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: ${{ secrets.AZURE_RG }}
+        dns-name-label: ${{ secrets.AZURE_RG }}${{ github.run_number }}
+        image: ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
+        registry-login-server: ${{ secrets.ACR_ENDPOINT }}
+        registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        name: aci-sampleapp
+        location: 'west europe'
