@@ -30,7 +30,7 @@ jobs:
       with:
         resource-group: ${{ secrets.AZURE_RG }}
         dns-name-label: ${{ secrets.AZURE_RG }}${{ github.run_number }}
-        image: ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
+        image: ${{ secrets.ACR_ENDPOINT }}/ingestor:${{ github.sha }}
         registry-login-server: ${{ secrets.ACR_ENDPOINT }}
         registry-username: ${{ secrets.ACR_USERNAME }}
         registry-password: ${{ secrets.ACR_PASSWORD }}
