@@ -1,5 +1,6 @@
 FROM python:latest
-COPY requirements.txt ./
+WORKDIR /root
+COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
-COPY /code/ingest.py /code/ingest.py
+COPY /code/ingest.py ingest.py
 CMD ["python", "ingest.py"]
