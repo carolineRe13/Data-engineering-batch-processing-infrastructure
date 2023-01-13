@@ -32,7 +32,7 @@ jobs:
         dns-name-label: ${{ secrets.AZURE_RG }}${{ github.run_number }}
         image: ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
         registry-login-server: ${{ secrets.ACR_ENDPOINT }}
-        registry-username: ${{ secrets.REGISTRY_USERNAME }}
-        registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        registry-username: ${{ secrets.ACR_USERNAME }}
+        registry-password: ${{ secrets.ACR_PASSWORD }}
         name: aci-sampleapp
         location: 'west europe'
