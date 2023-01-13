@@ -265,3 +265,6 @@ paket-files/
 __pycache__/
 *.pyc
 __*
+us-accidents.zip
+.kaggle/kaggle.json
+compose.yml

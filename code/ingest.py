@@ -1,43 +1,54 @@
+import json
 import os
-from kaggle.api.kaggle_api_extended import KaggleApi
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
 from datetime import datetime, timedelta
-from azure.storage.fileshare import ShareServiceClient, generate_account_sas, ResourceTypes, AccountSasPermissions
+from azure.storage.fileshare import ShareFileClient
 
 # get Kaggle API token from the KeyVault
 # keyVaultName = os.environ["KEY_VAULT_NAME"]
-keyVaultName = "DataEngineeringKV"
-KVUri = f"https://{keyVaultName}.vault.azure.net"
+KVUri = 'https://dataengineeringkv.vault.azure.net/'
+
+kaggle_folder = ".kaggle"
 
 credential = DefaultAzureCredential()
+
+# just for local 
+# credential = ChainedTokenCredential(new DefaultAzureCredential(), new EnvironmentCredential())
+
 client = SecretClient(vault_url=KVUri, credential=credential)
 
 # Kaggle
-os.env['KAGGLE_USERNAME'] = client.get_secret("KaggleUsername")
-os.env['KAGGLE_KEY'] = client.get_secret("KaggleKey")
+kaggle_username = client.get_secret("KaggleUsername")
+kaggle_key = client.get_secret("KaggleKey")
+kaggleData = {
+    "username": kaggle_username.value,
+    "key": kaggle_key.value
+}
 
-# storage account
-stroage_key = client.get_secret("StorageKey")
-stroage_name= client.get_secret("StorageName")
+json_object = json.dumps(kaggleData, indent=4)
+
+if not os.path.exists(kaggle_folder):
+   os.makedirs(kaggle_folder)
+
+print(os.path.abspath(kaggle_folder + "/kaggle.json")) 
+with open(kaggle_folder + "/kaggle.json", "w+") as outfile:
+    outfile.write(json_object)
 
 # authenticate to Kaggle
+from kaggle.api.kaggle_api_extended import KaggleApi
 api = KaggleApi()
 api.authenticate()
 
 # download kaggle dataset
-api.dataset_download_file('sobhanmoosavi/us-accidents',
-                              'US_Accidents_Dec21_updated.zip', path='./')
+api.dataset_download_files('sobhanmoosavi/us-accidents')
 
-sas_token = generate_account_sas(
-    account_name=stroage_name,
-    account_key=stroage_key,
-    resource_types=ResourceTypes(service=True),
-    permission=AccountSasPermissions(read=True),
-    expiry=datetime.utcnow() + timedelta(hours=1)
-)
 
-file_client = ShareServiceClient(account_url="https://" + stroage_name + ".file.core.windows.net", credential=sas_token)
 
-with open("./US_Accidents_Dec21_updated.zip", "rb") as source_file:
-    file_client.upload_file(source_file)
+# storage account
+sas_url = client.get_secret("SASURL").value
+
+file_client = ShareFileClient.from_file_url(sas_url)
+
+with open("us-accidents.zip", "rb") as data:
+    file_client.upload_file(data)
