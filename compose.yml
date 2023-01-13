@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  ingest:
+    build: .
+    environment:
+      - AZURE_CLIENT_ID=
+      - AZURE_CLIENT_SECRET=    
+      - AZURE_TENANT_ID=
+
+# fill out for local development
+# az account get-access-token --resource=https://vault.azure.net
