@@ -1,0 +1,35 @@
+on:
+  schedule:
+    - cron: '0 0 1 * *' # Run at 00:00 on the first day of every month
+name: Deploy and run pipeline
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./templates/main.bicep
+        failOnStdErr: false
+
+      # Build docker
+    - name: 'Build and push image'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_ENDPOINT }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - run: |
+        docker build . -t ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
+        docker push ${{ secrets.ACR_ENDPOINT }}/sampleapp:${{ github.sha }}
