@@ -1,6 +1,7 @@
-on:
-  schedule:
-    - cron:  '0 0 1 * *' # to run at 00:00 on the first day of every month
+# on:
+#  schedule:
+#    - cron:  '0 0 1 * *' # to run at 00:00 on the first day of every month
+on: [push]
 name: Deploy and run pipeline
 jobs:
   build-and-deploy:
