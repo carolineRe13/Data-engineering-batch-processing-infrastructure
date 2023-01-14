@@ -4,6 +4,7 @@ from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
 from datetime import datetime, timedelta
 from azure.storage.fileshare import ShareFileClient
+from azure.storage.blob import BlobClient
 
 # get Kaggle API token from the KeyVault
 # keyVaultName = os.environ["KEY_VAULT_NAME"]
@@ -43,12 +44,10 @@ api.authenticate()
 # download kaggle dataset
 api.dataset_download_files('sobhanmoosavi/us-accidents')
 
-
-
 # storage account
 sas_url = client.get_secret("SASURL").value
 
-file_client = ShareFileClient.from_file_url(sas_url)
+blob_client = BlobClient(account_url="https://testtoseekaggledata.blob.core.windows.net", container_name="test", blob_name="us.zip", credential=credential)
 
 with open("us-accidents.zip", "rb") as data:
-    file_client.upload_file(data)
+    blob_client.upload_blob(data)
