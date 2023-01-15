@@ -110,5 +110,3 @@ resource keyVaultSecretsUserRoleAssignment 'Microsoft.Authorization/roleAssignme
     principalType: 'ServicePrincipal'
   }
 }
-
-output containerIPv4Address string = containerGroup.properties.ipAddress.ip
