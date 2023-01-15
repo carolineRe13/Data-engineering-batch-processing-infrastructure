@@ -8,7 +8,7 @@ param projectName string
 
 
 resource rStorageAccount 'Microsoft.Storage/storageAccounts@2020-08-01-preview' = {
-  name: toLower('${projectName}datastorage')
+  name: toLower('${projectName}data')
   location: location
   sku: {
     name: 'Standard_LRS'
@@ -34,6 +34,7 @@ resource rStorageAccount 'Microsoft.Storage/storageAccounts@2020-08-01-preview' 
       services: {
         file: {
           keyType: 'Account'
+
           enabled: true
         }
         blob: {
