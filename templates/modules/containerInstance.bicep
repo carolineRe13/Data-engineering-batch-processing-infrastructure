@@ -86,7 +86,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
 }
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
-  name: '${projectName}datastorage'
+  name: toLower('${projectName}datastorage')
   scope: resourceGroup()
 }
 

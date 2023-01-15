@@ -8,7 +8,7 @@ param projectName string
 
 
 resource rStorageAccount 'Microsoft.Storage/storageAccounts@2020-08-01-preview' = {
-  name: '${projectName}datastorage'
+  name: toLower('${projectName}datastorage')
   location: location
   sku: {
     name: 'Standard_LRS'
