@@ -7,9 +7,6 @@ param name string = 'DataEngineeringUSTrafficContainerGroup'
 @description('Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials.')
 param image string = 'dataengineeringustrafficcontainerregistry.azurecr.io/ingestor:latest'
 
-@description('Port to open on the container and the public IP address.')
-param port int = 80
-
 @description('The number of CPU cores to allocate to the container.')
 param cpuCores int = 1
 
@@ -44,12 +41,6 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         name: name
         properties: {
           image: image
-          ports: [
-            {
-              port: port
-              protocol: 'TCP'
-            }
-          ]
           resources: {
             requests: {
               cpu: cpuCores
@@ -68,15 +59,6 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
     ]
     osType: 'Linux'
     restartPolicy: restartPolicy
-    ipAddress: {
-      type: 'Public'
-      ports: [
-        {
-          port: port
-          protocol: 'TCP'
-        }
-      ]
-    }
     subnetIds: [
       {
         id: subnetId

@@ -18,7 +18,8 @@ module containerInstance 'modules/containerInstance.bicep' = {
   params: {
     location: location
     secret: kv.getSecret('container-pwd')
-    subnetId: base64ToString(subNet.id)
+    subnetId: subNet.id
     projectName: projectName
+    restartPolicy: 'Never'
   }
 }
