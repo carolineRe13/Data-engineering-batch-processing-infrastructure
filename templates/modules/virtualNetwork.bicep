@@ -26,6 +26,14 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
               service: 'Microsoft.Storage'
             }
           ]
+          delegations: [
+            {
+              name: 'ContainerInstanceDelegation'
+              properties: {
+                serviceName: 'Microsoft.ContainerInstance'
+              }
+            }
+          ]
         }
       }
     ]
