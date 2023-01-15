@@ -88,8 +88,8 @@ resource blobDataContributorRoleAssignment 'Microsoft.Authorization/roleAssignme
   }
 }
 
-resource keyVault 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
-  name: '${projectName}datastorage'
+resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: '${projectName}KV'
   scope: resourceGroup()
 }
 

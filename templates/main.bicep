@@ -7,7 +7,7 @@ module virtualNetwork 'modules/virtualNetwork.bicep' = {
   name: '${projectName}USTrafficVirtualNetwork'
   params: {
     location: location
-    virtualNetworkName: 'DataEngineeringUSTrafficVirtualNetwork'
+    virtualNetworkName: '${projectName}USTrafficVirtualNetwork'
     subnetName: '${projectName}USTrafficSubNet'
   }
 }
