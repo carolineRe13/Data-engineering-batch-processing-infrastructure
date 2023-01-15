@@ -14,12 +14,13 @@ resource subNet 'Microsoft.Network/virtualNetworks/subnets@2019-11-01' existing 
 }
 
 module containerInstance 'modules/containerInstance.bicep' = {
-  name: 'DataEngineeringUSTrafficContainerGroup'
+  name: 'DataEngineeringContainerGroup'
   params: {
     location: location
     secret: kv.getSecret('container-pwd')
     subnetId: subNet.id
     projectName: projectName
     restartPolicy: 'Never'
+    name: '${projectName}ContainerGroup'
   }
 }

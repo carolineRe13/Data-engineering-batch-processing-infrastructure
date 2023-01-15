@@ -2,10 +2,12 @@
 param location string = resourceGroup().location
 
 @description('Name for the container group')
-param name string = 'DataEngineeringUSTrafficContainerGroup'
+param name string
 
 @description('Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials.')
 param image string = 'dataengineeringustrafficcontainerregistry.azurecr.io/ingestor:latest'
+@description('Name for the instance')
+param instanceName string = 'ingestor'
 
 @description('The number of CPU cores to allocate to the container.')
 param cpuCores int = 1
@@ -38,7 +40,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
   properties: {
     containers: [
       {
-        name: name
+        name: toLower(instanceName)
         properties: {
           image: image
           resources: {
