@@ -45,7 +45,7 @@ api.authenticate()
 api.dataset_download_files('sobhanmoosavi/us-accidents')
 
 # storage account
-blob_client = BlobClient(account_url="https://testtoseekaggledata.blob.core.windows.net", container_name="test", blob_name="us.zip", credential=credential)
+blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name="us.zip", credential=credential)
 
 with open("us-accidents.zip", "rb") as data:
     blob_client.upload_blob(data)
