@@ -7,7 +7,7 @@ param virtualNetworkId string
 param projectName string
 
 
-resource rStorageAccount 'Microsoft.Storage/storageAccounts@2020-08-01-preview' = {
+resource rStorageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: toLower('${projectName}data')
   location: location
   sku: {
@@ -16,7 +16,7 @@ resource rStorageAccount 'Microsoft.Storage/storageAccounts@2020-08-01-preview' 
   kind: 'StorageV2'
   properties: {
     minimumTlsVersion: 'TLS1_2'
-    allowBlobPublicAccess: true
+    allowBlobPublicAccess: false
     allowSharedKeyAccess: true
     largeFileSharesState: 'Enabled'
     networkAcls: {
@@ -30,25 +30,16 @@ resource rStorageAccount 'Microsoft.Storage/storageAccounts@2020-08-01-preview' 
       defaultAction: 'Deny'
     }
     supportsHttpsTrafficOnly: true
-    encryption: {
-      services: {
-        file: {
-          keyType: 'Account'
-
-          enabled: true
-        }
-        blob: {
-          keyType: 'Account'
-          enabled: true
-        }
-      }
-      keySource: 'Microsoft.Storage'
-    }
     accessTier: 'Hot'
   }
 }
 
-resource rStorageAccountContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
-  name: '${rStorageAccount.name}/default/container001'
-  properties: {}
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+  parent: rStorageAccount
+  name: 'default'
+}
+
+resource rStorageAccountContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+  parent: blobService
+  name: 'data'
 }
