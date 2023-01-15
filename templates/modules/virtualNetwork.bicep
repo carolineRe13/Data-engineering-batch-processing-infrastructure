@@ -30,7 +30,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
             {
               name: 'ContainerInstanceDelegation'
               properties: {
-                serviceName: 'Microsoft.ContainerInstance'
+                serviceName: 'Microsoft.ContainerInstance/containerGroups'
               }
             }
           ]
