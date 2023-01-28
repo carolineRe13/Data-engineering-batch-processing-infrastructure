@@ -61,4 +61,4 @@ for file in os.listdir("us-accidents"):
         print(file)
         blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=f"{file}{date.today()}", credential=credential)
         with open("us-accidents/" + file, "rb") as data:
-            blob_client.upload_file(data)
+            blob_client.upload_blob(data)
