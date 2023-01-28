@@ -36,6 +36,8 @@ jobs:
         registry-password: ${{ secrets.ACR_PASSWORD }}
         name: aci-dataengineering
         location: 'west europe'
+        command-line: 'ping -t localhost'
+
 
       # Create Spark cluster
     # - name: 'Create HDInsight'
