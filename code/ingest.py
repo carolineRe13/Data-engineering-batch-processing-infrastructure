@@ -5,6 +5,7 @@ from azure.identity import DefaultAzureCredential
 from datetime import datetime, timedelta
 from azure.storage.fileshare import ShareFileClient
 from azure.storage.blob import BlobClient
+from datetime import date
 
 # get Kaggle API token from the KeyVault
 # keyVaultName = os.environ["KEY_VAULT_NAME"]
@@ -45,6 +46,7 @@ api.authenticate()
 api.dataset_download_files('sobhanmoosavi/us-accidents')
 
 # storage account
+blob_name = f"us-accidents-{date.today()}.zip"
 blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name="us.zip", credential=credential)
 
 with open("us-accidents.zip", "rb") as data:
