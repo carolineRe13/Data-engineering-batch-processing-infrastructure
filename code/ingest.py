@@ -59,6 +59,6 @@ with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
 for file in os.listdir("us-accidents"):
     if file.endswith(".csv"):
         print(file)
-        file_client = ShareFileClient(account_url="https://dataengineeringdata.file.core.windows.net/", share_name="data", file_path=f"{file}{date.today()}", credential=credential)
+        blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=f"{file}{date.today()}", credential=credential)
         with open("us-accidents/" + file, "rb") as data:
-            file_client.upload_file(data)
+            blob_client.upload_file(data)
