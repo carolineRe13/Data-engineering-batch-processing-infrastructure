@@ -29,7 +29,7 @@ jobs:
       uses: 'azure/aci-deploy@v1'
       with:
         resource-group: ${{ secrets.AZURE_RG }}
-        dns-name-label: ${{ secrets.AZURE_RG }}dns
+        dns-name-label: ${{ secrets.AZURE_RG }}${{ github.sha }}dns
         image: ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
         registry-login-server: ${{ secrets.ACR_ENDPOINT }}
         registry-username: ${{ secrets.ACR_USERNAME }}
