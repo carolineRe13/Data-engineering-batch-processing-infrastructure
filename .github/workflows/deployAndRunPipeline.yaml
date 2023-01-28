@@ -25,17 +25,17 @@ jobs:
         failOnStdErr: false
 
       # Deploy to Azure container instances
-    # - name: 'Deploy to Azure Container Instances'
-    #   uses: 'azure/aci-deploy@v1'
-    #   with:
-    #     resource-group: ${{ secrets.AZURE_RG }}
-    #     dns-name-label: ${{ secrets.AZURE_RG }}dns
-    #     image: ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
-    #     registry-login-server: ${{ secrets.ACR_ENDPOINT }}
-    #     registry-username: ${{ secrets.ACR_USERNAME }}
-    #     registry-password: ${{ secrets.ACR_PASSWORD }}
-    #     name: aci-dataengineering
-    #     location: 'west europe'
+    - name: 'Deploy to Azure Container Instances'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: ${{ secrets.AZURE_RG }}
+        # dns-name-label: ${{ secrets.AZURE_RG }}dns
+        image: ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
+        registry-login-server: ${{ secrets.ACR_ENDPOINT }}
+        registry-username: ${{ secrets.ACR_USERNAME }}
+        registry-password: ${{ secrets.ACR_PASSWORD }}
+        name: aci-dataengineering${{ github.sha }}
+        location: 'west europe'
 
       # Create Spark cluster
     # - name: 'Create HDInsight'
