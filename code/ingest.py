@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from azure.storage.fileshare import ShareFileClient
 from azure.storage.blob import BlobClient
 from datetime import date
+import zipfile
 
 # get Kaggle API token from the KeyVault
 # keyVaultName = os.environ["KEY_VAULT_NAME"]
@@ -47,7 +48,17 @@ api.dataset_download_files('sobhanmoosavi/us-accidents')
 
 # storage account
 blob_name = f"us-accidents-{date.today()}.zip"
-blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name="us.zip", credential=credential)
+blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=blob_name, credential=credential)
 
 with open("us-accidents.zip", "rb") as data:
     blob_client.upload_blob(data)
+
+with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
+    zip_ref.extractall("us-accidents")
+
+for file in os.listdir("us-accidents"):
+    if file.endswith(".csv"):
+        print(file)
+        file_client = ShareFileClient(account_url="https://dataengineeringdata.file.core.windows.net/", share_name="data", file_path=f"{file}{date.today()}", credential=credential)
+        with open("us-accidents/" + file, "rb") as data:
+            file_client.upload_file(data)
