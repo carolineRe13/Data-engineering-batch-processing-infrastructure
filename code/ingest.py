@@ -47,7 +47,7 @@ def download_dataset():
     api.dataset_download_files(DATASET_NAME)
 
 
-def upload_dataset_to_blob_storage():
+def upload_dataset_to_blob_storage(credential):
     today = date.today()
     # storage account
     upload_blob(credential, "us-accidents.zip", f"us-accidents-{today}.zip")
@@ -68,3 +68,5 @@ if __name__ == "__main__":
     # authenticate to Kaggle
     setup_kaggle(credential)
     download_dataset()
+
+    upload_dataset_to_blob_storage(credential)
