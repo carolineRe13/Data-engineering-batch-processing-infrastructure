@@ -268,3 +268,8 @@ __*
 us-accidents.zip
 .kaggle/kaggle.json
 compose.yml
+
+# Virtual environment
+Scripts/
+Lib/
+pyvenv.cfg

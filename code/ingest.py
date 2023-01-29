@@ -2,63 +2,69 @@ import json
 import os
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
-from datetime import datetime, timedelta
-from azure.storage.fileshare import ShareFileClient
 from azure.storage.blob import BlobClient
 from datetime import date
 import zipfile
 
-# get Kaggle API token from the KeyVault
-# keyVaultName = os.environ["KEY_VAULT_NAME"]
-KVUri = 'https://dataengineeringkv.vault.azure.net/'
+KV_URI = 'https://dataengineeringkv.vault.azure.net/'
+KAGGLE_FOLDER = ".kaggle"
+KAGGLE_TOKEN_FILE = "kaggle.json"
+DATASET_NAME = "sobhanmoosavi/us-accidents"
 
-kaggle_folder = ".kaggle"
 
-credential = DefaultAzureCredential()
+def upload_blob(credential, file, blob_name):
+    blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=blob_name, credential=credential)
+    with open(file, "rb") as data:
+        blob_client.upload_blob(data)
 
-# just for local 
-# credential = ChainedTokenCredential(new DefaultAzureCredential(), new EnvironmentCredential())
 
-client = SecretClient(vault_url=KVUri, credential=credential)
+def setup_kaggle(credential):
+    client = SecretClient(vault_url=KV_URI, credential=credential)
 
-# Kaggle
-kaggle_username = client.get_secret("KaggleUsername")
-kaggle_key = client.get_secret("KaggleKey")
-kaggleData = {
-    "username": kaggle_username.value,
-    "key": kaggle_key.value
-}
+    # Kaggle
+    kaggle_username = client.get_secret("KaggleUsername")
+    kaggle_key = client.get_secret("KaggleKey")
+    kaggleData = {
+        "username": kaggle_username.value,
+        "key": kaggle_key.value
+    }
 
-json_object = json.dumps(kaggleData, indent=4)
+    json_object = json.dumps(kaggleData, indent=4)
 
-if not os.path.exists(kaggle_folder):
-   os.makedirs(kaggle_folder)
+    if not os.path.exists(KAGGLE_FOLDER):
+        os.makedirs(KAGGLE_FOLDER)
 
-print(os.path.abspath(kaggle_folder + "/kaggle.json")) 
-with open(kaggle_folder + "/kaggle.json", "w+") as outfile:
-    outfile.write(json_object)
+    with open(os.path.join(KAGGLE_FOLDER, KAGGLE_TOKEN_FILE), "w+") as outfile:
+        outfile.write(json_object)
 
-# authenticate to Kaggle
-from kaggle.api.kaggle_api_extended import KaggleApi
-api = KaggleApi()
-api.authenticate()
 
-# download kaggle dataset
-api.dataset_download_files('sobhanmoosavi/us-accidents')
+def download_dataset():
+    from kaggle.api.kaggle_api_extended import KaggleApi # here as it looks for the kaggle.json file on import
+    api = KaggleApi()
+    api.authenticate()
 
-# storage account
-blob_name = f"us-accidents-{date.today()}.zip"
-blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=blob_name, credential=credential)
+    # download kaggle dataset
+    api.dataset_download_files(DATASET_NAME)
 
-with open("us-accidents.zip", "rb") as data:
-    blob_client.upload_blob(data)
 
-with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
-    zip_ref.extractall("us-accidents")
+def upload_dataset_to_blob_storage():
+    today = date.today()
+    # storage account
+    upload_blob(credential, "us-accidents.zip", f"us-accidents-{today}.zip")
 
-for file in os.listdir("us-accidents"):
-    if file.endswith(".csv"):
-        print(file)
-        blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=f"{file}{date.today()}", credential=credential)
-        with open("us-accidents/" + file, "rb") as data:
-            blob_client.upload_blob(data)
+    with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
+        zip_ref.extractall("us-accidents")
+
+    for file in os.listdir("us-accidents"):
+        if file.endswith(".csv"):
+            upload_blob(credential, "us-accidents/" + file, file.replace(".csv", f"-{today}.csv"))
+
+
+if __name__ == "__main__":
+    # just for local 
+    # credential = ChainedTokenCredential(new DefaultAzureCredential(), new EnvironmentCredential())
+    credential = DefaultAzureCredential()
+
+    # authenticate to Kaggle
+    setup_kaggle(credential)
+    download_dataset()
