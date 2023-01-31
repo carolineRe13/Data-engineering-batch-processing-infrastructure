@@ -51,6 +51,33 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           }
         }
       }
+      {
+        name: 'spark-master'
+        properties: {
+          image: 'apache/spark:latest'
+          resources: {
+            requests: {
+              cpu: cpuCores
+              memoryInGB: memoryInGb
+            }
+          }
+          command: [
+            '/bin/bash'
+            '-c'
+            'mkdir -p /opt/spark/logs/ && /opt/spark/sbin/start-master.sh && tail -f /opt/spark/logs/*'
+          ]
+          ports: [
+            {
+              port: 7077
+              protocol: 'TCP'
+            }
+            {
+              port: 8080
+              protocol: 'TCP'
+            }
+          ]
+        }
+      }
     ]
     imageRegistryCredentials: [
       {
