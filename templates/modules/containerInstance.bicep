@@ -78,6 +78,52 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           ]
         }
       }
+      {
+        name: 'spark-slave-1'
+        properties: {
+          image: 'apache/spark:latest'
+          resources: {
+            requests: {
+              cpu: cpuCores
+              memoryInGB: memoryInGb
+            }
+          }
+          command: [
+            '/bin/bash'
+            '-c'
+            '/opt/spark/sbin/start-slave.sh --webui-port 8081 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
+          ]
+          ports: [
+            {
+              port: 8081
+              protocol: 'TCP'
+            }
+          ]
+        }
+      }
+      {
+        name: 'spark-slave-2'
+        properties: {
+          image: 'apache/spark:latest'
+          resources: {
+            requests: {
+              cpu: cpuCores
+              memoryInGB: memoryInGb
+            }
+          }
+          command: [
+            '/bin/bash'
+            '-c'
+            '/opt/spark/sbin/start-slave.sh --webui-port 8082 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
+          ]
+          ports: [
+            {
+              port: 8082
+              protocol: 'TCP'
+            }
+          ]
+        }
+      }
     ]
     imageRegistryCredentials: [
       {
