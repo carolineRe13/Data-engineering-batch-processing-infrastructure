@@ -78,7 +78,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           ]
           volumeMounts: [
             {
-              name: 'logs'
+              name: 'spark-logs'
               mountPath: '/opt/spark/logs'
             }
           ]
@@ -107,7 +107,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           ]
           volumeMounts: [
             {
-              name: 'logs'
+              name: 'spark-logs'
               mountPath: '/opt/spark/logs'
             }
           ]
@@ -136,7 +136,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           ]
           volumeMounts: [
             {
-              name: 'logs'
+              name: 'spark-logs'
               mountPath: '/opt/spark/logs'
             }
           ]
