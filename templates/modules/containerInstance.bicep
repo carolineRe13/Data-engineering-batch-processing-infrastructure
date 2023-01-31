@@ -64,7 +64,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           command: [
             '/bin/bash'
             '-c'
-            'mkdir -p /opt/spark/logs/ && /opt/spark/sbin/start-master.sh && tail -f /opt/spark/logs/*'
+            '/opt/spark/sbin/start-master.sh && tail -f /opt/spark/logs/*'
           ]
           ports: [
             {
@@ -74,6 +74,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
             {
               port: 8080
               protocol: 'TCP'
+            }
+          ]
+          volumeMounts: [
+            {
+              name: 'logs'
+              mountPath: '/opt/spark/logs'
             }
           ]
         }
@@ -99,6 +105,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
               protocol: 'TCP'
             }
           ]
+          volumeMounts: [
+            {
+              name: 'logs'
+              mountPath: '/opt/spark/logs'
+            }
+          ]
         }
       }
       {
@@ -122,6 +134,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
               protocol: 'TCP'
             }
           ]
+          volumeMounts: [
+            {
+              name: 'logs'
+              mountPath: '/opt/spark/logs'
+            }
+          ]
         }
       }
     ]
@@ -139,6 +157,14 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         id: subnetId
       }
     ]
+    volumes: [{
+      name: 'spark-logs'
+      azureFile: {
+        shareName: 'spark-logs'
+        storageAccountName: toLower('${projectName}data')
+        storageAccountKey: listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower('${projectName}data')), '2021-04-01').keys[0].value
+      }
+    }]
   }
 }
 
