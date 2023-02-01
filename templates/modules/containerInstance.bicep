@@ -85,7 +85,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         }
       }
       {
-        name: 'spark-slave-1'
+        name: 'spark-worker-1'
         properties: {
           image: 'apache/spark:latest'
           resources: {
@@ -97,7 +97,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           command: [
             '/bin/bash'
             '-c'
-            '/opt/spark/sbin/start-slave.sh --webui-port 8081 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
+            '/opt/spark/sbin/start-worker.sh --webui-port 8081 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
           ]
           ports: [
             {
@@ -114,7 +114,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         }
       }
       {
-        name: 'spark-slave-2'
+        name: 'spark-worker-2'
         properties: {
           image: 'apache/spark:latest'
           resources: {
@@ -126,7 +126,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           command: [
             '/bin/bash'
             '-c'
-            '/opt/spark/sbin/start-slave.sh --webui-port 8082 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
+            '/opt/spark/sbin/start-worker.sh --webui-port 8082 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
           ]
           ports: [
             {
