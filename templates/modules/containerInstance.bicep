@@ -6,6 +6,11 @@ param name string
 
 @description('Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials.')
 param image string = 'dataengineeringustrafficcontainerregistry.azurecr.io/ingestor:latest'
+
+param sparkMasterImage string = 'dataengineeringustrafficcontainerregistry.azurecr.io/spark-master:latest'
+
+param sparkWorkerImage string = 'dataengineeringustrafficcontainerregistry.azurecr.io/spark-worker:latest'
+
 @description('Name for the instance')
 param instanceName string = 'ingestor'
 
@@ -54,18 +59,13 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
       {
         name: 'spark-master'
         properties: {
-          image: 'apache/spark:latest'
+          image: toLower(sparkMasterImage)
           resources: {
             requests: {
               cpu: cpuCores
               memoryInGB: memoryInGb
             }
           }
-          command: [
-            '/bin/bash'
-            '-c'
-            '/opt/spark/sbin/start-master.sh && tail -f /opt/spark/logs/*'
-          ]
           ports: [
             {
               port: 7077
@@ -87,21 +87,22 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
       {
         name: 'spark-worker-1'
         properties: {
-          image: 'apache/spark:latest'
+          image: toLower(sparkWorkerImage)
           resources: {
             requests: {
               cpu: cpuCores
               memoryInGB: memoryInGb
             }
           }
-          command: [
-            '/bin/bash'
-            '-c'
-            '/opt/spark/sbin/start-worker.sh --webui-port 8081 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
+          environmentVariables: [
+            {
+              name: 'WEBUI_PORT'
+              value: '8181'
+            }
           ]
           ports: [
             {
-              port: 8081
+              port: 8181
               protocol: 'TCP'
             }
           ]
@@ -123,14 +124,15 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
               memoryInGB: memoryInGb
             }
           }
-          command: [
-            '/bin/bash'
-            '-c'
-            '/opt/spark/sbin/start-worker.sh --webui-port 8082 spark://spark-master:7077  && tail -f /opt/spark/logs/**'
+          environmentVariables: [
+            {
+              name: 'WEBUI_PORT'
+              value: '8181'
+            }
           ]
           ports: [
             {
-              port: 8082
+              port: 8182
               protocol: 'TCP'
             }
           ]

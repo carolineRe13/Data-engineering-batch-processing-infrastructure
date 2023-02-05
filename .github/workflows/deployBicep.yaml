@@ -21,7 +21,7 @@ jobs:
         template: ./templates/main.bicep
         failOnStdErr: false
 
-  build-and-push-image:
+  build-and-push-ingestor:
     runs-on: ubuntu-latest
     needs: build-and-deploy
     steps:
@@ -34,21 +34,69 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Build docker
-    - name: 'Build and push image'
+    - name: 'Build and push ingestor'
       uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_ENDPOINT }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - run: |
-        docker build . -t ${{ secrets.ACR_ENDPOINT }}/ingestor:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
+        docker build ./Dockerfiles/ingestor.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/ingestor:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
         docker push -a ${{ secrets.ACR_ENDPOINT }}/ingestor
+
+  build-and-push-spark-master:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Build docker
+    - name: 'Build and push spark master'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_ENDPOINT }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - run: |
+        docker build ./Dockerfiles/spark-master.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-master:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-master:latest
+        docker push -a ${{ secrets.ACR_ENDPOINT }}/spark-master
+
+  build-and-push-spark-worker:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Build docker
+    - name: 'Build and push spark worker'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.ACR_ENDPOINT }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - run: |
+        docker build ./Dockerfiles/spark-worker.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:latest
+        docker push -a ${{ secrets.ACR_ENDPOINT }}/spark-worker
 
   build-and-deploy-pipeline:
     runs-on: ubuntu-latest
-    needs: build-and-push-image
+    needs: 
+      - build-and-push-ingestor
+      - build-and-push-spark-master
+      - build-and-push-spark-worker
     steps:
-
       # Checkout code
     - uses: actions/checkout@main
 
