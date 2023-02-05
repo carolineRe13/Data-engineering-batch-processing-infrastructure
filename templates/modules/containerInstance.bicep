@@ -36,6 +36,39 @@ param secret string
 
 param projectName string
 
+param workerCount int = 2
+
+var workers = [for index in range(0, workerCount): {
+  name: 'spark-worker-${index}'
+  properties: {
+    image: sparkWorkerImage
+    resources: {
+      requests: {
+        cpu: cpuCores
+        memoryInGB: memoryInGb
+      }
+    }
+    environmentVariables: [
+      {
+        name: 'WEBUI_PORT'
+        value: 8180 + index
+      }
+    ]
+    ports: [
+      {
+        port: 8180 + index
+        protocol: 'TCP'
+      }
+    ]
+    volumeMounts: [
+      {
+        name: 'spark-logs'
+        mountPath: '/opt/spark/logs'
+      }
+    ]
+  }
+}]
+
 resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01' = {
   name: name
   location: location
@@ -43,7 +76,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
     type: 'SystemAssigned'
   }
   properties: {
-    containers: [
+    containers: concat([
       {
         name: toLower(instanceName)
         properties: {
@@ -59,7 +92,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
       {
         name: 'spark-master'
         properties: {
-          image: toLower(sparkMasterImage)
+          image: sparkMasterImage
           resources: {
             requests: {
               cpu: cpuCores
@@ -84,67 +117,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
           ]
         }
       }
-      {
-        name: 'spark-worker-1'
-        properties: {
-          image: toLower(sparkWorkerImage)
-          resources: {
-            requests: {
-              cpu: cpuCores
-              memoryInGB: memoryInGb
-            }
-          }
-          environmentVariables: [
-            {
-              name: 'WEBUI_PORT'
-              value: '8181'
-            }
-          ]
-          ports: [
-            {
-              port: 8181
-              protocol: 'TCP'
-            }
-          ]
-          volumeMounts: [
-            {
-              name: 'spark-logs'
-              mountPath: '/opt/spark/logs'
-            }
-          ]
-        }
-      }
-      {
-        name: 'spark-worker-2'
-        properties: {
-          image: 'apache/spark:latest'
-          resources: {
-            requests: {
-              cpu: cpuCores
-              memoryInGB: memoryInGb
-            }
-          }
-          environmentVariables: [
-            {
-              name: 'WEBUI_PORT'
-              value: '8181'
-            }
-          ]
-          ports: [
-            {
-              port: 8182
-              protocol: 'TCP'
-            }
-          ]
-          volumeMounts: [
-            {
-              name: 'spark-logs'
-              mountPath: '/opt/spark/logs'
-            }
-          ]
-        }
-      }
-    ]
+    ], workers)
     imageRegistryCredentials: [
       {
         username: 'DataEngineeringUSTrafficContainerRegistry'
