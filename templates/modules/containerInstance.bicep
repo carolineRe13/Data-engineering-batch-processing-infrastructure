@@ -54,7 +54,7 @@ var workers = [for index in range(0, workerCount): {
         value: 8180 + index
       }
       { 
-        name: 'SPARK_MASTER'
+        name: 'MASTER_URL'
         value: 'localhost:7077'
       }
     ]
