@@ -53,6 +53,10 @@ var workers = [for index in range(0, workerCount): {
         name: 'WEBUI_PORT'
         value: 8180 + index
       }
+      { 
+        name: 'SPARK_MASTER'
+        value: 'localhost:7077'
+      }
     ]
     ports: [
       {
