@@ -41,7 +41,7 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - run: |
-        docker build ./Dockerfiles/ingestor.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/ingestor:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
+        docker build -f ./Dockerfiles/ingestor.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/ingestor:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/ingestor:latest .
         docker push -a ${{ secrets.ACR_ENDPOINT }}/ingestor
 
   build-and-push-spark-master:
@@ -64,7 +64,7 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - run: |
-        docker build ./Dockerfiles/spark-master.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-master:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-master:latest
+        docker build -f ./Dockerfiles/spark-master.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-master:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-master:latest .
         docker push -a ${{ secrets.ACR_ENDPOINT }}/spark-master
 
   build-and-push-spark-worker:
@@ -87,7 +87,7 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - run: |
-        docker build ./Dockerfiles/spark-worker.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:latest
+        docker build -f ./Dockerfiles/spark-worker.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:latest .
         docker push -a ${{ secrets.ACR_ENDPOINT }}/spark-worker
 
   build-and-deploy-pipeline:
