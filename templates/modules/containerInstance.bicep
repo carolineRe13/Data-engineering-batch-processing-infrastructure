@@ -63,7 +63,7 @@ var workers = [for index in range(0, workerCount): {
         port: 8180 + index
         protocol: 'TCP'
       }
-    ]
+    ]asdfadf
     volumeMounts: [
       {
         name: 'spark-logs'
