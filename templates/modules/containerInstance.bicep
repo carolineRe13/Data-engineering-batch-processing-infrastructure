@@ -103,6 +103,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
               memoryInGB: memoryInGb
             }
           }
+          environmentVariables: [
+            {
+              name: 'ENVIRONMENT'
+              value: 'Production'
+            }
+          ]
           volumeMounts: [
             {
               name: 'spark-data'
