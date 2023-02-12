@@ -184,11 +184,11 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
     ]
     osType: 'Linux'
     restartPolicy: restartPolicy
-    subnetIds: [
-      {
-        id: subnetId
-      }
-    ]
+    // subnetIds: [
+    //   {
+    //     id: subnetId
+    //   }
+    // ]
     volumes: [
       {
         name: 'spark-logs'
