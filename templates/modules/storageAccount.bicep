@@ -49,7 +49,12 @@ resource fileServices 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01
   name: 'default'
 }
 
-resource rStorageAccountContainer 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+resource sparkLogsFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
   parent: fileServices
   name: 'spark-logs'
+}
+
+resource dataFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+  parent: fileServices
+  name: 'spark-data'
 }

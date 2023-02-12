@@ -1,7 +1,7 @@
 import json
 import os
 from azure.keyvault.secrets import SecretClient
-from azure.identity import DefaultAzureCredential
+from azure.identity import DefaultAzureCredential, ChainedTokenCredential, EnvironmentCredential
 from azure.storage.blob import BlobClient
 from datetime import date
 import zipfile
@@ -62,8 +62,8 @@ def upload_dataset_to_blob_storage(credential):
 
 if __name__ == "__main__":
     # just for local 
-    # credential = ChainedTokenCredential(new DefaultAzureCredential(), new EnvironmentCredential())
-    credential = DefaultAzureCredential()
+    credential = ChainedTokenCredential(DefaultAzureCredential(), EnvironmentCredential())
+    # credential = DefaultAzureCredential()
 
     # authenticate to Kaggle
     setup_kaggle(credential)

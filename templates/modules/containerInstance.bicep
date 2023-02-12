@@ -57,10 +57,18 @@ var workers = [for index in range(0, workerCount): {
         name: 'MASTER_URL'
         value: 'localhost:7077'
       }
+      {
+        name: 'WORKER_PORT'
+        value: 38080 + index
+      }
     ]
     ports: [
       {
         port: 8180 + index
+        protocol: 'TCP'
+      }
+      {
+        port: 38080 + index
         protocol: 'TCP'
       }
     ]
@@ -68,6 +76,10 @@ var workers = [for index in range(0, workerCount): {
       {
         name: 'spark-logs'
         mountPath: '/opt/spark/logs'
+      }
+      {
+        name: 'spark-data'
+        mountPath: '/data'
       }
     ]
   }
@@ -91,6 +103,12 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
               memoryInGB: memoryInGb
             }
           }
+          volumeMounts: [
+            {
+              name: 'spark-data'
+              mountPath: '/data'
+            }
+          ]
         }
       }
       {
@@ -118,6 +136,10 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
               name: 'spark-logs'
               mountPath: '/opt/spark/logs'
             }
+            {
+              name: 'spark-data'
+              mountPath: '/data'
+            }
           ]
         }
       }
@@ -136,14 +158,24 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         id: subnetId
       }
     ]
-    volumes: [{
-      name: 'spark-logs'
-      azureFile: {
-        shareName: 'spark-logs'
-        storageAccountName: toLower('${projectName}data')
-        storageAccountKey: listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower('${projectName}data')), '2021-04-01').keys[0].value
+    volumes: [
+      {
+        name: 'spark-logs'
+        azureFile: {
+          shareName: 'spark-logs'
+          storageAccountName: toLower('${projectName}data')
+          storageAccountKey: listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower('${projectName}data')), '2021-04-01').keys[0].value
+        }
       }
-    }]
+      {
+        name: 'spark-data'
+        azureFile: {
+          shareName: 'spark-data'
+          storageAccountName: toLower('${projectName}data')
+          storageAccountKey: listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower('${projectName}data')), '2021-04-01').keys[0].value
+        }
+      }
+    ]
   }
 }
 

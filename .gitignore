@@ -273,3 +273,5 @@ compose.yml
 Scripts/
 Lib/
 pyvenv.cfg
+
+data/
