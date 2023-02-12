@@ -54,6 +54,7 @@ def upload_dataset_to_blob_storage(credential):
 
     with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
         zip_ref.extractall("us-accidents")
+        zip_ref.extractall("data")
 
     for file in os.listdir("us-accidents"):
         if file.endswith(".csv"):
@@ -61,9 +62,7 @@ def upload_dataset_to_blob_storage(credential):
 
 
 if __name__ == "__main__":
-    # just for local 
     credential = ChainedTokenCredential(DefaultAzureCredential(), EnvironmentCredential())
-    # credential = DefaultAzureCredential()
 
     # authenticate to Kaggle
     setup_kaggle(credential)

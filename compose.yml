@@ -10,7 +10,7 @@ services:
       - AZURE_TENANT_ID=cbd1b406-5730-4839-956f-4be8c42b224e
       - ENVIRONMENT=Development
     volumes:
-      - ./data:/root/us-accidents
+      - ./data:/data
       - ./code:/root/code
 
   spark-master:
@@ -23,7 +23,7 @@ services:
     user: root
     volumes:
       - ./log:/opt/spark/logs
-      - ./data:/root/us-accidents
+      - ./data:/data
   
   spark-worker-1:
     build: 
@@ -38,7 +38,7 @@ services:
     user: root
     volumes:
       - ./log:/opt/spark/logs
-      - ./data:/root/us-accidents
+      - ./data:/data
   
   spark-worker-2:
     build: 
@@ -53,4 +53,4 @@ services:
     user: root
     volumes:
       - ./log:/opt/spark/logs
-      - ./data:/root/us-accidents
+      - ./data:/data
