@@ -17,8 +17,14 @@ param instanceName string = 'ingestor'
 @description('The number of CPU cores to allocate to the container.')
 param cpuCores int = 1
 
+@description('The number of CPU cores to allocate to the spark worker containers. (per container)')
+param workerCpuCores int = 1
+
 @description('The amount of memory to allocate to the container in gigabytes.')
 param memoryInGb int = 2
+
+@description('The amount of memory to allocate to the spark worker containers in gigabytes. (per container)')
+param workerMemoryInGb int = 4
 
 @description('The behavior of Azure runtime if container has stopped.')
 @allowed([
@@ -44,8 +50,8 @@ var workers = [for index in range(0, workerCount): {
     image: sparkWorkerImage
     resources: {
       requests: {
-        cpu: cpuCores
-        memoryInGB: memoryInGb
+        cpu: workerCpuCores
+        memoryInGB: workerMemoryInGb
       }
     }
     environmentVariables: [
@@ -80,6 +86,11 @@ var workers = [for index in range(0, workerCount): {
       {
         name: 'spark-data'
         mountPath: '/data'
+        readOnly: true
+      }
+      {
+        name: 'spark-tmp'
+        mountPath: '/tmp'
       }
     ]
   }
@@ -145,6 +156,11 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
             {
               name: 'spark-data'
               mountPath: '/data'
+              readOnly: true
+            }
+            {
+              name: 'spark-tmp'
+              mountPath: '/tmp'
             }
           ]
         }
@@ -177,6 +193,14 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         name: 'spark-data'
         azureFile: {
           shareName: 'spark-data'
+          storageAccountName: toLower('${projectName}data')
+          storageAccountKey: listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower('${projectName}data')), '2021-04-01').keys[0].value
+        }
+      }
+      {
+        name: 'spark-tmp'
+        azureFile: {
+          shareName: 'spark-tmp'
           storageAccountName: toLower('${projectName}data')
           storageAccountKey: listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower('${projectName}data')), '2021-04-01').keys[0].value
         }

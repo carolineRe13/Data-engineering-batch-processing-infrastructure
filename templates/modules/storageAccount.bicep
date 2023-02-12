@@ -58,3 +58,8 @@ resource dataFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@20
   parent: fileServices
   name: 'spark-data'
 }
+
+resource tmpFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+  parent: fileServices
+  name: 'spark-tmp'
+}
