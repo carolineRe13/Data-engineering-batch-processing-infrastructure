@@ -167,7 +167,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
       }
     ], workers)
     ipAddress: {
-      type: 'Public'
+      type: 'Private'
       ports: [
         {
           port: 8080
@@ -184,11 +184,11 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
     ]
     osType: 'Linux'
     restartPolicy: restartPolicy
-    // subnetIds: [
-    //   {
-    //     id: subnetId
-    //   }
-    // ]
+    subnetIds: [
+      {
+        id: subnetId
+      }
+    ]
     volumes: [
       {
         name: 'spark-logs'
