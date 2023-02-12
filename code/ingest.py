@@ -12,13 +12,13 @@ KAGGLE_TOKEN_FILE = "kaggle.json"
 DATASET_NAME = "sobhanmoosavi/us-accidents"
 
 
-def upload_blob(credential, file, blob_name):
-    blob_client = BlobClient(account_url="https://dataengineeringdata.blob.core.windows.net/", container_name="data", blob_name=blob_name, credential=credential)
-    with open(file, "rb") as data:
-        blob_client.upload_blob(data)
+def setup_kaggle():
+    # check if kaggle.json exists
+    if (os.path.exists(os.path.join(KAGGLE_FOLDER, KAGGLE_TOKEN_FILE))):
+        return
 
+    credential = ChainedTokenCredential(DefaultAzureCredential(), EnvironmentCredential())
 
-def setup_kaggle(credential):
     client = SecretClient(vault_url=KV_URI, credential=credential)
 
     # Kaggle
@@ -47,25 +47,14 @@ def download_dataset():
     api.dataset_download_files(DATASET_NAME)
 
 
-def upload_dataset_to_blob_storage(credential):
-    today = date.today()
-    # storage account
-    upload_blob(credential, "us-accidents.zip", f"us-accidents-{today}.zip")
-
+def unpack_dataset_to_shared_data_folder():
     with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
-        zip_ref.extractall("us-accidents")
         zip_ref.extractall("../data")
-
-    for file in os.listdir("us-accidents"):
-        if file.endswith(".csv"):
-            upload_blob(credential, "us-accidents/" + file, file.replace(".csv", f"-{today}.csv"))
 
 
 if __name__ == "__main__":
-    credential = ChainedTokenCredential(DefaultAzureCredential(), EnvironmentCredential())
-
     # authenticate to Kaggle
-    setup_kaggle(credential)
+    setup_kaggle()
     download_dataset()
 
-    upload_dataset_to_blob_storage(credential)
+    unpack_dataset_to_shared_data_folder()
