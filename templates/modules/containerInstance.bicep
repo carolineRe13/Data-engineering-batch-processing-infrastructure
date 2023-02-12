@@ -166,6 +166,15 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
         }
       }
     ], workers)
+    ipAddress: {
+      type: 'Public'
+      ports: [
+        {
+          port: 8080
+          protocol: 'TCP'
+        }
+      ]
+    }
     imageRegistryCredentials: [
       {
         username: 'DataEngineeringUSTrafficContainerRegistry'
