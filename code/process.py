@@ -1,16 +1,14 @@
+import os
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
 
+MASTER_URI = "spark://spark-master:7077" if os.environ["ENVIRONMENT"] == "Development" else "spark://localhost:7077"
 
 def a():
     # with open as csv:
     conf = SparkConf()\
-            .setAppName("Word Count")\
-            .setMaster("spark://spark-master:7077")\
-            # .set("spark.exexutor.memory", "4g")\
-            # .set("spark.local.ip", "127.0.0.1")\
-            # .set("spark.driver.host", "host.docker.internal")\
-            # .set("spark.driver.port", "52777")\
+            .setAppName("Preprocessing")\
+            .setMaster(MASTER_URI)
 
     spark = SparkSession.builder\
                 .config(conf=conf)\
@@ -20,7 +18,6 @@ def a():
     df.printSchema()
 
     print(sorted(df.groupBy("Severity").agg({"*": "count"}).collect()))
-
 
 
 if __name__ == "__main__":
