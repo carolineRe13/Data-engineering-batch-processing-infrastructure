@@ -24,7 +24,7 @@ param workerCpuCores int = 1
 param memoryInGb int = 2
 
 @description('The amount of memory to allocate to the spark worker containers in gigabytes. (per container)')
-param workerMemoryInGb int = 4
+param workerMemoryInGb int = 2
 
 @description('The behavior of Azure runtime if container has stopped.')
 @allowed([
