@@ -12,6 +12,7 @@ services:
     volumes:
       - ./data:/data
       - ./code:/root/code
+      - ${KAGGLE_HOME}:/root/.kaggle
 
   spark-master:
     build: 

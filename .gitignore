@@ -275,3 +275,4 @@ Lib/
 pyvenv.cfg
 
 data/
+.env

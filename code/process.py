@@ -5,6 +5,8 @@ from pyspark.sql import SparkSession
 MASTER_URI = "spark://spark-master:7077" if os.environ["ENVIRONMENT"] == "Development" else "spark://localhost:7077"
 
 def preprocess():
+    # TODO: make sure cluster is started before running this script
+
     # with open as csv:
     conf = SparkConf()\
             .setAppName("Preprocessing")\
