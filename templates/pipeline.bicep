@@ -1,32 +1,19 @@
 @description('location for all resources.')
-param location string = 'westus'
+param location string = resourceGroup().location
 
 var projectName = 'DataEngineering'
 
-targetScope = 'subscription'
-
-resource staticResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: projectName
-  location: location
-}
-
-resource pipelineResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: projectName
-  location: location
-}
-
 resource kv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: '${projectName}KV'
-  scope: staticResourceGroup
+  scope: resourceGroup()
 }
 
 resource subNet 'Microsoft.Network/virtualNetworks/subnets@2019-11-01' existing = {
   name: '${projectName}USTrafficVirtualNetwork/${projectName}USTrafficSubNet'
-  scope: staticResourceGroup
+  scope: resourceGroup()
 }
 
 module containerInstance 'modules/containerInstance.bicep' = {
-  scope: pipelineResourceGroup
   name: 'DataEngineeringContainerGroup'
   params: {
     location: location
