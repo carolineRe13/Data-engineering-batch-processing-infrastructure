@@ -4,6 +4,7 @@ on:
   repository_dispatch:
     types:
       - run
+  workflow_dispatch:
 name: Deploy and run pipeline
 jobs:
   build-and-deploy-pipeline:

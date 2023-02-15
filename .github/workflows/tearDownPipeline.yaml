@@ -3,6 +3,7 @@ on:
     types:
       - done
       - canceled
+  workflow_dispatch:
 name: Tear down pipeline
 jobs:
   tear-down-pipeline:
