@@ -23,4 +23,4 @@ jobs:
         azcliversion: 2.45.0
         inlineScript: |
           chmod +x $GITHUB_WORKSPACE/devops/tearDownPipeline.sh
-          $GITHUB_WORKSPACE/devops/tearDownPipeline.sh ${{ secrets.AZURE_RG }}
+          $GITHUB_WORKSPACE/devops/tearDownPipeline.sh ${{ secrets.AZURE_SUBSCRIPTION }} ${{ secrets.AZURE_RG }}
