@@ -1,0 +1,25 @@
+on:
+  pipeline_state_dispatch:
+    types:
+      - done
+      - canceled
+name: Tear down pipeline
+jobs:
+  tear-down-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: deploy
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.45.0
+        inlineScript: |
+          chmod +x $GITHUB_WORKSPACE/devops/tearDownPipeline.sh
+          $GITHUB_WORKSPACE/devops/tearDownPipeline.sh ${{ secrets.AZURE_RG }}

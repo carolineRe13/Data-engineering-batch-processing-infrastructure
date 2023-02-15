@@ -18,7 +18,7 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./templates/main.bicep
+        template: ./devops/templates/main.bicep
         failOnStdErr: false
 
   build-and-push-ingestor:
@@ -89,39 +89,3 @@ jobs:
     - run: |
         docker build -f ./Dockerfiles/spark-worker.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/spark-worker:latest .
         docker push -a ${{ secrets.ACR_ENDPOINT }}/spark-worker
-
-  build-and-deploy-pipeline:
-    runs-on: ubuntu-latest
-    needs: 
-      - build-and-push-ingestor
-      - build-and-push-spark-master
-      - build-and-push-spark-worker
-    steps:
-      # Checkout code
-    - uses: actions/checkout@main
-
-      # Log into Azure
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: deploy
-      uses: azure/arm-deploy@v1
-      with:
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./templates/pipeline.bicep
-        failOnStdErr: false
-
-      # Deploy to Azure container instances
-    # - name: 'Deploy to Azure Container Instances'
-    #   uses: 'azure/aci-deploy@v1'
-    #   with:
-    #     resource-group: ${{ secrets.AZURE_RG }}
-    #     dns-name-label: ${{ secrets.AZURE_RG }}dns
-    #     image: ${{ secrets.ACR_ENDPOINT }}/ingestor:latest
-    #     registry-login-server: ${{ secrets.ACR_ENDPOINT }}
-    #     registry-username: ${{ secrets.ACR_USERNAME }}
-    #     registry-password: ${{ secrets.ACR_PASSWORD }}
-    #     name: aci-dataengineering
-    #     location: 'west europe'
