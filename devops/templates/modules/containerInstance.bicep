@@ -218,27 +218,6 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2021-09-01'
   }
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
-  name: toLower('${projectName}data')
-  scope: resourceGroup()
-}
-
-@description('This is the built-in Contributor role. See https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor')
-resource storageBlobDataContributor 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
-  scope: subscription()
-  name: 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
-}
-
-resource blobDataContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  scope: storageAccount
-  name: guid(storageAccount.id, containerGroup.id, storageBlobDataContributor.id)
-  properties: {
-    roleDefinitionId: storageBlobDataContributor.id
-    principalId: containerGroup.identity.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
-
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   name: '${projectName}KV'
   scope: resourceGroup()
