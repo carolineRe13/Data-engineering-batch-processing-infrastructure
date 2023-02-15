@@ -1,5 +1,5 @@
 on:
-  pipeline_state_dispatch:
+  repository_dispatch:
     types:
       - done
       - canceled
