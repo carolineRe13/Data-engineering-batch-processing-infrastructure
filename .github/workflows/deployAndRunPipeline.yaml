@@ -9,10 +9,6 @@ name: Deploy and run pipeline
 jobs:
   build-and-deploy-pipeline:
     runs-on: ubuntu-latest
-    needs: 
-      - build-and-push-ingestor
-      - build-and-push-spark-master
-      - build-and-push-spark-worker
     steps:
       # Checkout code
     - uses: actions/checkout@main
