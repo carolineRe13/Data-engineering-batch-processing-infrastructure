@@ -1,5 +1,5 @@
 on:
- schedule:
+  schedule:
    - cron:  '0 0 1 * *' # to run at 00:00 on the first day of every month
   repository_dispatch:
     types:
