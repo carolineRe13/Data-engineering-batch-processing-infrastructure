@@ -23,12 +23,23 @@
 - Create a new service principal  
   `az ad sp create-for-rbac --name "<name>" --sdk-auth --role 'custom contributor' --scopes /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>`  
 - Add a secret to the github repo with the name `AZURE_CREDENTIALS` and the value of the output from the above command 
+- Add a secret to the github repo with the name `AZURE_SUBSCRIPTION` and the value of the subscription id
+- Add a secret to the github repo with the name `AZURE_RG` and the value of the resource group name
 - Create [github token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   - It should have 'Repository permissions':
     - Read access to code and metadata
     - Read and Write access to actions and workflows
 - Create a new secret in the keyvault with the name `webhook-trigger` and the value of the token you just created
 - Create a new secret in the keyvalut with the name `GithubRepo` and the value of the repo (<username>/Data-engineering-batch-processing-infrastructure)
+
+The first time you run the "Azure ARM" workflow it will fail as it creates resources that need to be added as secrets to github.
+After the first run:
+- Go to the ACR resource in the resource group
+- Go to the "Access Keys" tab
+- Add the following secrets to the github repo:
+  - `ACR_ENDPOINT`: Login server
+  - `ACR_USERNAME`: Username
+  - `ACR_PASSWORD`: password
 
 ## Trigger a pipeline run
 You can use the github token created above in these commands.
