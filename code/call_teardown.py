@@ -2,8 +2,7 @@ import os
 import requests
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential, ChainedTokenCredential, EnvironmentCredential
-
-KV_URI = 'https://dataengineeringkv.vault.azure.net/'
+from code.constants import KV_URI
 
 
 def call_teardown_workflow():
