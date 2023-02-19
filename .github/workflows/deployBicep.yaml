@@ -21,7 +21,7 @@ jobs:
         template: ./devops/templates/main.bicep
         failOnStdErr: false
 
-  build-and-push-ingestor:
+  build-and-push-pipeline:
     runs-on: ubuntu-latest
     needs: build-and-deploy
     steps:
@@ -34,15 +34,15 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Build docker
-    - name: 'Build and push ingestor'
+    - name: 'Build and push pipeline'
       uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_ENDPOINT }}
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
     - run: |
-        docker build -f ./Dockerfiles/ingestor.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/ingestor:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/ingestor:latest .
-        docker push -a ${{ secrets.ACR_ENDPOINT }}/ingestor
+        docker build -f ./Dockerfiles/pipeline.Dockerfile -t ${{ secrets.ACR_ENDPOINT }}/pipeline:${{ github.sha }} -t ${{ secrets.ACR_ENDPOINT }}/pipeline:latest .
+        docker push -a ${{ secrets.ACR_ENDPOINT }}/pipeline
 
   build-and-push-spark-master:
     runs-on: ubuntu-latest

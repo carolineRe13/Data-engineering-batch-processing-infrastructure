@@ -5,14 +5,14 @@ param location string = resourceGroup().location
 param name string
 
 @description('Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials.')
-param image string = 'dataengineeringustrafficcontainerregistry.azurecr.io/ingestor:latest'
+param image string = 'dataengineeringustrafficcontainerregistry.azurecr.io/pipeline:latest'
 
 param sparkMasterImage string = 'dataengineeringustrafficcontainerregistry.azurecr.io/spark-master:latest'
 
 param sparkWorkerImage string = 'dataengineeringustrafficcontainerregistry.azurecr.io/spark-worker:latest'
 
 @description('Name for the instance')
-param instanceName string = 'ingestor'
+param instanceName string = 'pipeline'
 
 @description('The number of CPU cores to allocate to the container.')
 param cpuCores int = 1
@@ -32,7 +32,7 @@ param workerMemoryInGb int = 2
   'Never'
   'OnFailure'
 ])
-param restartPolicy string = 'Always'
+param restartPolicy string = 'OnFailure'
 
 @description('Id from the subnet of the virtual network')
 param subnetId string

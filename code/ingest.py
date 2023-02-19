@@ -2,8 +2,6 @@ import json
 import os
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential, ChainedTokenCredential, EnvironmentCredential
-from azure.storage.blob import BlobClient
-from datetime import date
 import zipfile
 
 KV_URI = 'https://dataengineeringkv.vault.azure.net/'
@@ -15,6 +13,7 @@ DATASET_NAME = "sobhanmoosavi/us-accidents"
 def setup_kaggle():
     # check if kaggle.json exists
     if (os.path.exists(os.path.join(KAGGLE_FOLDER, KAGGLE_TOKEN_FILE))):
+        print("Kaggle token already exists, skipping setup")
         return
 
     credential = ChainedTokenCredential(DefaultAzureCredential(), EnvironmentCredential())
@@ -39,6 +38,7 @@ def setup_kaggle():
 
 
 def download_dataset():
+    print("Downloading dataset")
     from kaggle.api.kaggle_api_extended import KaggleApi # here as it looks for the kaggle.json file on import
     api = KaggleApi()
     api.authenticate()
@@ -48,6 +48,7 @@ def download_dataset():
 
 
 def unpack_dataset_to_shared_data_folder():
+    print("Unpacking dataset")
     with zipfile.ZipFile("us-accidents.zip", 'r') as zip_ref:
         zip_ref.extractall("../data")
 
