@@ -67,6 +67,10 @@ var workers = [for index in range(0, workerCount): {
         name: 'WORKER_PORT'
         value: 38080 + index
       }
+      {
+        name: 'MEMORY'
+        value: '${workerMemoryInGb}G'
+      }
     ]
     ports: [
       {
