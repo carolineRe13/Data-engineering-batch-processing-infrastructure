@@ -1,5 +1,6 @@
 # Data-engineering-batch-processing-infrastructure
 ## Running the project locally
+- make sure `docker` and `docker-compose` are installed
 - create kaggle.json file in a folder of your choice. (ex: $HOME/.kaggle/kaggle.json)
 ```
 {
@@ -7,9 +8,9 @@
     "key": kaggle_key
 }
 ```
-- create .env file in root of project
+- create `.env` file in root of project
 - Add `KAGGLE_HOME="path/to/kaggle/folder"` to it
-
+- `docker-compose up`
 
 ## Deployment using github actions
 - Create a new resource group
