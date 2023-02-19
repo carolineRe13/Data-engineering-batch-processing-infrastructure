@@ -1,4 +1,4 @@
-FROM apache/spark:latest
+FROM apache/spark:v3.3.1
 ENV WEBUI_PORT=8081
 ENV WORKER_PORT=38081
 ENV MASTER_URL=spark-master:7077
