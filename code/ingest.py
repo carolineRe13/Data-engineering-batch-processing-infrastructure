@@ -3,7 +3,7 @@ import os
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential, ChainedTokenCredential, EnvironmentCredential
 import zipfile
-from code.constants import KV_URI
+from constants import KV_URI
 
 KAGGLE_FOLDER = ".kaggle"
 KAGGLE_TOKEN_FILE = "kaggle.json"

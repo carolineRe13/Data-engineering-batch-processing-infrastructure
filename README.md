@@ -42,8 +42,11 @@ After the first run:
   - `ACR_USERNAME`: Username
   - `ACR_PASSWORD`: password
 
+## Change number of spark worker nodes
+You can change the number of spark worker nodes by passing a `workerCount` parameter to the containerInstance.bicep file. This requires a teardown and deploy of the pipeline.
+
 ## Trigger a pipeline run
-You can use the github token created above in these commands.
+You can use the github token created above in this command.
 ```
 curl -i \
   -X POST \  
@@ -54,6 +57,8 @@ curl -i \
   -d '{"ref":"main"}'
 ```
 
+## Cancel a pipeline run
+You can use the github token created above in this command.
 ```
 curl -i \
   -X POST \
