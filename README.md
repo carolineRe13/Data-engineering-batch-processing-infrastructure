@@ -2,7 +2,7 @@
 ## About this project
 This project contains a system which runs quartaly ingesting a large amount of data by pulling it from [Kaggle (US accidents)](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents). The data is stored and pre-processes on Azure with the help of Spark. During this step, rows not having the weather condition set are removed and the different US states are grouped with their weather conditions. The aggregated data can later on be used for a machine learning application which is not covered in this repository.
 
-Special about this project is that a part of the infrastructure for the pre-processing is created in a seperated resource group and teared down after it's use to save running costs. For more information about the tear down, have a look at [tearDownPipeline.sh](https://github.com/carolineRe13/Data-engineering-batch-processing-infrastructure/blob/main/devops/tearDownPipeline.sh).
+Special about this project is that a part of the infrastructure (i.e. container group and the role assignment) for the pre-processing is created and teared down after it's use to save running costs. For more information about the tear down, have a look at [tearDownPipeline.sh](https://github.com/carolineRe13/Data-engineering-batch-processing-infrastructure/blob/main/devops/tearDownPipeline.sh).
 
 ## Running the project locally
 - make sure `docker` and `docker-compose` are installed
