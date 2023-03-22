@@ -90,7 +90,6 @@ var workers = [for index in range(0, workerCount): {
       {
         name: 'spark-data'
         mountPath: '/data'
-        readOnly: true
       }
       {
         name: 'spark-tmp'
